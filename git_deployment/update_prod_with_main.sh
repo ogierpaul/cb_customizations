@@ -27,7 +27,7 @@ for branch in "${child_branches[@]}"; do
         git merge origin/"$main_branch" || exit
 
         # Run tests or any other validation steps here
-        bash dbt_run/test_dbt_seed_run_test.sh --target "$dev_branch" || exit
+        bash dbt_run/test_dbt_seed_run_test.sh --target "$branch" || exit
 
         git push origin "$branch" || exit
 
