@@ -26,7 +26,7 @@ git checkout $target
 git merge origin/$target
 cd $repo_root/cb_customizations
 echo "starting dbt"
-dbt seed
-dbt run --target $target
-dbt test --target $target
+dbt seed || exit 1
+dbt run --target $target || exit 1
+dbt test --target $target || exit 1
 echo "dbt test run completed."
