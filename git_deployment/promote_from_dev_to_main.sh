@@ -17,8 +17,12 @@ git checkout "$dev_branch" || exit
 # Pull the latest changes from the dev branch
 git pull origin "$dev_branch" || exit
 
+
 # Run tests or any other validation steps here
 # ./run_tests.sh
+
+git add .
+git commit -m "message"
 
 git push origin "$dev_branch" || exit
 
