@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# List of child branches
+# List of child branches -- shouldn't be here but in git or dynamically generated, but it's fine for poc
 child_branches=("standard" "client1" "client2")
 
 # Set the main branch
@@ -36,6 +36,6 @@ for branch in "${child_branches[@]}"; do
 done
 
 # Switch back to the original branch
-git checkout - || exit
+git checkout "$main_branch" || exit
 
 echo "Update complete for specified branches."
