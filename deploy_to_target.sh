@@ -16,7 +16,11 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
+
 git checkout $target
 git pull origin $target
+git merge origin/main
+git push origin $target
 cd cb_customizations
 dbt run --target $target
+git checkout dev
