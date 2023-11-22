@@ -1,1 +1,6 @@
 .python-version
+logs/
+cb_customizations/target/
+cb_customizations/dbt_packages/
+cb_customizations/logs/
+privat_snowflake_users.sql
