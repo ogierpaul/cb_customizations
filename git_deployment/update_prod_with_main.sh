@@ -26,6 +26,9 @@ for branch in "${child_branches[@]}"; do
         # Merge the changes from the main branch into the child branch
         git merge origin/"$main_branch" || exit
 
+        # Run tests or any other validation steps here
+        bash dbt_run/test_dbt_seed_run_test.sh --target "$dev_branch" || exit
+
         git push origin "$branch" || exit
 
         # Print a newline for better readability
