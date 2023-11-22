@@ -23,4 +23,3 @@ git merge origin/main
 git push origin $target
 cd cb_customizations
 dbt run --target $target
-git checkout dev
