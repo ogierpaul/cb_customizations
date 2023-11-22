@@ -13,6 +13,8 @@ for branch in "${child_branches[@]}"; do
     # Checkout the child branch
     git checkout "$branch" || exit
 
+    git pull origin "$branch" || exit
+
     # Check if the branch is behind the main branch
     commits_behind=$(git rev-list --count "$branch..$main_branch")
     
@@ -23,6 +25,8 @@ for branch in "${child_branches[@]}"; do
 
         # Merge the changes from the main branch into the child branch
         git merge origin/"$main_branch" || exit
+
+        git push origin "$branch" || exit
 
         # Print a newline for better readability
         echo
