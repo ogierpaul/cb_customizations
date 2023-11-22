@@ -1,10 +1,8 @@
-#!/bin/bash
-# Default values
-reference="dev"
-target="dev"
-
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root" || exit
+
+target="dev"
+reference="dev"
 
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
@@ -26,6 +24,5 @@ done
 
 git checkout $target
 git merge origin/$target
-git merge origin/$reference
-git push origin $target
-git checkout $reference
+cd $repo_root/cb_customizations
+dbt run --target $target
