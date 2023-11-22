@@ -29,7 +29,7 @@ git push origin "$dev_branch" || exit
 # If tests pass, move to the stage branch
 git checkout "$stage_branch" || exit
 git merge --no-ff "$dev_branch" -m "Merge $dev_branch into $stage_branch" || exit
-bash dbt_run/test_dbt_run_test.sh --target "$stage_branch" || exit
+bash dbt_run/test_dbt_seed_run_test.sh --target "$stage_branch" || exit
 git push origin "$stage_branch" || exit
 
 # If deploying to a stage environment, add deployment steps here
