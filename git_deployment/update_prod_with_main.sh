@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of child branches
-child_branches=("client" "client1" "client2")
+child_branches=("standard" "client1" "client2")
 
 # Set the main branch
 main_branch="main"
