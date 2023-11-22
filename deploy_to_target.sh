@@ -17,8 +17,9 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 
-git checkout $target
+git switch $target
 git pull origin $target
+git merge origin/$target
 git merge origin/main
 git push origin $target
 cd cb_customizations
