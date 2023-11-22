@@ -2,6 +2,8 @@
 # Default values
 reference="dev"
 target="stage"
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root" || exit
 
 # Parse named arguments
 while [[ "$#" -gt 0 ]]; do
@@ -21,8 +23,8 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-
 git checkout $target
 git merge origin/$target
 git merge origin/$reference
 git push origin $target
+git checkout $reference
