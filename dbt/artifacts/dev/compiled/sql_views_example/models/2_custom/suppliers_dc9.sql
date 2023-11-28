@@ -1,0 +1,7 @@
+SELECT
+a."SUPPLIER_ID",
+  a."SUPPLIER_NAME",
+  a."SUPPLIER_COUNTRY"
+
+FROM
+CB_DEV.DEV.suppliers_raw AS a
