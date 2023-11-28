@@ -1,3 +1,5 @@
+{{config(materialized='view')}}
+
 SELECT
 b.supplier_name,
 SUM(a.AMOUNT) as amount
