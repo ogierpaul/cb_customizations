@@ -4,4 +4,4 @@ a."DIM_INVOICE",
   a."AMOUNT"
 
 FROM
-CB_DEV.DEV.invoices_raw AS a
+CB_DEV.STG.invoices_raw AS a
