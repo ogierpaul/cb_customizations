@@ -1,6 +1,9 @@
 .python-version
 logs/
-cb_customizations/target/
-cb_customizations/dbt_packages/
-cb_customizations/logs/
-preparations/privat_snowflake_users.sql
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+*.ipynb
+*.ipynb_checkpoints/
+*__pycache__
+*.pytest_cache
