@@ -21,10 +21,10 @@ for branch in "${child_branches[@]}"; do
     # If the branch is behind, pull the latest changes
     if [ "$commits_behind" -gt 0 ]; then
         # Fetch the latest changes from the main branch
-        git fetch origin "$main_branch" || exit
+        git fetch origin "$main_branch"  || exit
 
         # Merge the changes from the main branch into the child branch
-        git merge origin/"$main_branch" || exit
+        git merge origin/"$main_branch" -m "Merging main"|| exit
 
         # Run tests or any other validation steps here
         bash tests/test_dbt_build_full.sh --target "$branch" || exit
