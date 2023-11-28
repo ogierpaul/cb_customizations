@@ -1,0 +1,7 @@
+SELECT
+a."DIM_INVOICE",
+  a."SUPPLIER_ID",
+  a."AMOUNT"
+
+FROM
+CB_DEV.DEV.invoices_raw AS a

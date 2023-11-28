@@ -1,0 +1,2 @@
+SELECT SUM(AMOUNT) AS AMOUNT
+FROM CB_DEV.DEV.spend_by_supplier
