@@ -29,7 +29,7 @@ for branch in "${child_branches[@]}"; do
         # Run tests or any other validation steps here
         cd dbt
         dbt build --select state:modified+ --target "$branch" --state=../../jfrog/"$branch" || exit
-        dbt compile --select state:modified+ --target "$branch" --target-path=../../jfrog/"$branch" || exit
+        dbt compile --target "$branch" --target-path=../../jfrog/"$branch" || exit
 
         git push origin "$branch" || exit
 
