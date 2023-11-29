@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # List of child branches -- shouldn't be here but in git or dynamically generated, but it's fine for poc
-child_branches=("standard" "client1" "client2")
+child_branches=("client1" "client2")
 
-# Set the main branch
+# Set the branch to be merged
 main_branch="main"
 
 # Iterate through each child branch
@@ -27,7 +27,9 @@ for branch in "${child_branches[@]}"; do
         git merge origin/"$main_branch" -m "Merging main"|| exit
 
         # Run tests or any other validation steps here
-        bash tests/test_dbt_build_full.sh --target "$branch" || exit
+        cd dbt
+        dbt build --select state:modified+ --target "$branch" --state=../../jfrog/"$branch" || exit
+        dbt compile --select state:modified+ --target "$branch" --target-path=../../jfrog/"$branch" || exit
 
         git push origin "$branch" || exit
 
