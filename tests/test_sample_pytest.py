@@ -48,6 +48,30 @@ def target_env():
     return target
 
 
+@pytest.fixture(scope='session', autouse=True)
+def ref_env():
+    # If arguments are sent from the command line
+    def parse_command_line_arguments():
+        target = None
+        argv = sys.argv
+        for i in range(len(argv)):
+            if i in ('-t', '--target'):
+                target = argv[i+1]
+                break
+        return target
+
+    def parse_environment_variable():
+        target = os.environ.get('TARGET')
+        return target
+
+    def default_target():
+        return __default_target__
+    target = parse_command_line_arguments(
+    ) or parse_environment_variable() or default_target()
+
+    return target
+
+
 @pytest.fixture(scope='session')
 def dbtrunner():
     return dbtRunner()
@@ -63,3 +87,7 @@ def test_full_build(dbtrunner, target_env):
     assert dbtrunner.invoke(["seed",  "--target", target_env])
     assert dbtrunner.invoke(["build",  "--target", target_env])
 
+
+def test_artifacts(dbtrunner, target_env):
+    assert dbtrunner.invoke(["ls", "--select", "state:modified+",
+                            "--target", target_env, "--state=../../jfrog/"+target_env])
