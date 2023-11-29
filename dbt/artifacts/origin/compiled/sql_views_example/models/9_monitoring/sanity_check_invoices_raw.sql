@@ -1,2 +1,2 @@
 SELECT SUM(AMOUNT) AS AMOUNT
-FROM CB_DEV.DEV.invoices_raw
+FROM CB_DEV.STG.invoices_raw

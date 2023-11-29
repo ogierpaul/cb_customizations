@@ -4,4 +4,4 @@ a."SUPPLIER_ID",
   a."SUPPLIER_COUNTRY"
 
 FROM
-CB_DEV.DEV.suppliers_raw AS a
+CB_DEV.STG.suppliers_raw AS a
