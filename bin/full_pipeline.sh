@@ -23,5 +23,5 @@ git add .
 git commit -m "M"
 git push origin main
 
-bash bin/update_prod_with_main
+bash bin/update_prod_with_main.sh
 
