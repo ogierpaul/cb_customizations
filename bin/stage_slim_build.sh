@@ -8,7 +8,7 @@ cd "$repo_root"/dbt || exit
 
 dbt build --select state:modified+ --target stage --state=../../jfrog/stage  || exit
 
-dbt compile --target stage --target-path=--state=../../jfrog/stage 
+dbt compile --target stage --target-path=../../jfrog/stage 
 
 dbt clean
 
