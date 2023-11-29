@@ -1,0 +1,5 @@
+version : 2
+
+models:
+  - name: count_suppliers
+    description: A custom model adding another flag
