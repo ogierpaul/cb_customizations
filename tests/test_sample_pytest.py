@@ -90,4 +90,4 @@ def test_full_build(dbtrunner, target_env):
 
 def test_artifacts(dbtrunner, target_env):
     assert dbtrunner.invoke(["ls", "--select", "state:modified+",
-                            "--target", target_env, "--state=artifacts/origin"])
+                            "--target", target_env, "--state=../../jfrog/"+target_env])
