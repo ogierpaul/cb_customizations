@@ -6,9 +6,9 @@ git pull origin stage
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"/dbt || exit
 
-dbt build --select state:modified+ --target stage --state=artifacts/origin || exit
+dbt build --select state:modified+ --target stage --state=../../jfrog/stage  || exit
 
-dbt compile --target stage --target-path artifacts/origin
+dbt compile --target stage --target-path=--state=../../jfrog/stage 
 
 dbt clean
 
