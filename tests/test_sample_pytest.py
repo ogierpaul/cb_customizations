@@ -86,3 +86,8 @@ def test_full_build(dbtrunner, target_env):
     assert dbtrunner.invoke(["deps"])
     assert dbtrunner.invoke(["seed",  "--target", target_env])
     assert dbtrunner.invoke(["build",  "--target", target_env])
+
+
+def test_artifacts(dbtrunner, target_env):
+    assert dbtrunner.invoke(["ls", "--select", "state:modified+",
+                            "--target", target_env, "--state=artifacts/origin"])
