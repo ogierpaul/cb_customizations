@@ -12,9 +12,11 @@ env:
   DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
 
 jobs:
-  dev_ddebug:
-    name: dev_deployment
+  dev_debug:
+
     runs-on: ubuntu-latest
+    steps:
+    
       - name: Checkout Repository
         uses: actions/checkout
       
