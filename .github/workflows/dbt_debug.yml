@@ -4,6 +4,7 @@ name: dev_debug
 on: push 
     
 env:
+  DBT_PROFILES_DIR: ./
   DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER}}
   DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD}}
   DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
