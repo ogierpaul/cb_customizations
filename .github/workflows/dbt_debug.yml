@@ -16,12 +16,6 @@ jobs:
     name: dev_deployment
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Check out
-        uses: actions/checkout@v3
-        with:
-          ref: dev
-
       - uses: actions/setup-python@v1
         with:
           python-version: "3.9.18"
