@@ -29,8 +29,6 @@ jobs:
       - name: Install dependencies
         run:  pip install -r requirements.txt
 
-      - name: Go to dbt folder
-        run:  cd dbt
-
       - name: Test configuration
         run:  dbt debug --target dev
+        working-directory: ./dbt
