@@ -13,12 +13,12 @@ env:
 
 jobs:
   dev_debug:
-
+    name: dev_deployment
     runs-on: ubuntu-latest
+
     steps:
-    
-      - name: Checkout Repository
-        uses: actions/checkout
+      - name: Check out
+        uses: actions/checkout@v3
       
       - uses: actions/setup-python@v1
         with:
