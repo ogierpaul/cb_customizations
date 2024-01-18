@@ -1,0 +1,26 @@
+config: 
+  send_anonymous_usage_stats: False
+  use_colors: True
+
+
+snowflake-creds: &snowflake-creds
+  type: snowflake
+  account: "{{env_var('DBT_SNOWFLAKE_ACCOUNT')}}"
+  user: "{{env_var('DBT_SNOWFLAKE_USER')}}"
+  password: "{{env_var('DBT_SNOWFLAKE_PASSWORD')}}"
+  database: DEMO
+  role: "{{env_var('DBT_SNOWFLAKE_ROLE')}}"
+  warehouse: "{{env_var('DBT_SNOWFLAKE_WH')}}"
+  threads: 8
+  client_session_keep_alive: False
+
+
+cb_customizations:
+  outputs:
+    dev:
+      <<: *snowflake-creds
+      schema: DEV
+    main:
+      <<: *snowflake-creds
+      schema: MAIN
+  target: dev

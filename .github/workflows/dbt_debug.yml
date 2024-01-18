@@ -1,0 +1,33 @@
+# Dployment pipeline 
+name: dev_debug
+
+on: push 
+    
+env:
+  DBT_PROFILES_DIR: ./
+  DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER}}
+  DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD}}
+  DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
+  DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+  DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
+
+jobs:
+  dev_ddebug:
+    name: dev_deployment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+        with:
+          ref: dev
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.9.18"
+        
+      - name: Install dependencies
+        run:  pip install -r requirements.txt
+           
+      - name: Test configuration
+        run:  dbt debug --target dev

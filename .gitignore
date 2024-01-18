@@ -7,3 +7,4 @@ dbt/logs/
 *.ipynb_checkpoints/
 *__pycache__
 *.pytest_cache
+dbt/cb_customizations.env
