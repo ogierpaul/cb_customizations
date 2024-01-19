@@ -36,7 +36,7 @@ jobs:
         working-directory: ./dbt
       
       - name: Seed the model
-        name: dbt seed
+        run: dbt seed
         working-directory: ./dbt
 
       - name: build and test (Full)
