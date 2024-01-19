@@ -1,6 +1,0 @@
-version : 2
-
-models:
-  - name: spend_by_supplier
-    columns:
-      - name: supplier_name

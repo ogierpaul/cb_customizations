@@ -1,0 +1,39 @@
+version : 2
+
+models:
+  - name: invoices_transformed
+    columns:
+      - name: dim_invoice
+        description: invoice key
+        tests:
+          - unique
+          - not_null
+      - name: supplier_id
+        description: FK to supplier master data
+        tests:
+          - relationships:
+              to: ref('suppliers_transformed')
+              field: supplier_id
+      - name: amount
+        description: amount in EUR
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+  - name: suppliers_transformed
+    columns:
+      - name: supplier_id
+        description: supplier unique key
+        tests:
+          - unique
+          - not_null
+      - name: supplier_name
+        description: supplier name
+        tests:
+          - dbt_utils.not_empty_string
+      - name: supplier_country
+        description: country as supplier country
+        tests:
+        - dbt_expectations.expect_column_value_lengths_to_equal:
+            value: 2
+

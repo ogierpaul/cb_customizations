@@ -1,0 +1,50 @@
+version : 2
+
+models:
+  - name: invoices_dc9
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: dim_invoice
+        description: invoice key
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: supplier_id
+        description: FK to supplier master data
+        data_type: int
+        tests:
+          - relationships:
+              to: ref('suppliers_dc9')
+              field: supplier_id
+      - name: amount
+        data_type: float
+        description: amount in EUR
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+  - name: suppliers_dc9
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: supplier_id
+        description: supplier unique key
+        data_type: int
+        tests:
+          - unique
+          - not_null
+      - name: supplier_name
+        description: supplier name
+        data_type: string
+        tests:
+          - dbt_utils.not_empty_string
+      - name: supplier_country
+        description: country as supplier country
+        data_type: string
+        tests:
+        - dbt_expectations.expect_column_value_lengths_to_equal:
+            value: 2
