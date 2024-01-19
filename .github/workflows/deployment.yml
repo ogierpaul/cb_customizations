@@ -1,7 +1,14 @@
-# Dployment pipeline 
-name: dev_debug
+# Deployment pipeline 
+name: Development
 
-on: push
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+  workflow_call:
     
 env:
   DBT_PROFILES_DIR: ./
@@ -12,10 +19,9 @@ env:
   DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
 
 jobs:
-  dev_debug:
-    name: ci_pipeline
+  ci_test:
+    name: test dbt
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out
         uses: actions/checkout@v3
