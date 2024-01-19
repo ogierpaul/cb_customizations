@@ -1,7 +1,7 @@
 # Dployment pipeline 
 name: dev_debug
 
-on: push 
+on: push
     
 env:
   DBT_PROFILES_DIR: ./
@@ -13,7 +13,7 @@ env:
 
 jobs:
   dev_debug:
-    name: dev_deployment
+    name: ci_pipeline
     runs-on: ubuntu-latest
 
     steps:
@@ -24,18 +24,21 @@ jobs:
         with:
           python-version: "3.9.18"
 
-      - name: Echo
-        run:  ls
-        working-directory: ./dbt
-
-      - name: Test
+      - name: Test profiles existence
         run:  test -e profiles.yml
         working-directory: ./dbt
 
-
       - name: Install dependencies
         run:  pip install -r requirements.txt
+      
+      - name: install dbt packages
+        run: dbt deps
+        working-directory: ./dbt
+      
+      - name: Seed the model
+        run: dbt seed
+        working-directory: ./dbt
 
-      - name: Test configuration
-        run:  dbt debug --target dev
+      - name: build and test (Full)
+        run:  dbt build
         working-directory: ./dbt

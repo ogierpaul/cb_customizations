@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: seeds_source_invoices
+    description: invoices used for test data
+    columns:
+      - name: dim_invoice
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: amount
+      - name: supplier_id
+        tests:
+          - not_null
+  - name: seeds_source_suppliers
+    description: suppliers used for test data
+    columns:
+      - name: supplier_id
+        description: primary key
+        tests:
+          - unique
+          - not_null
+      - name: name
+      - name: country
