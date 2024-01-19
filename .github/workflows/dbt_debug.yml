@@ -30,6 +30,14 @@ jobs:
 
       - name: Install dependencies
         run:  pip install -r requirements.txt
+      
+      - name: install dbt packages
+        run: dbt deps
+        working-directory: ./dbt
+      
+      - name: Seed the model
+        name: dbt seed
+        working-directory: ./dbt
 
       - name: build and test (Full)
         run:  dbt build
