@@ -10,10 +10,6 @@ jobs:
   build-and-test-the-pull-request:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        branch: ['main1', 'main2'] # Add more main branches if needed
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
