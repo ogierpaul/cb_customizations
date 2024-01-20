@@ -8,6 +8,8 @@ on:
       - edited
       - synchronize
       - reopened
+    branches:
+      - not_existing
   workflow_call:
     
 env:
