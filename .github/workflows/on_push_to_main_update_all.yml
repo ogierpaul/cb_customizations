@@ -22,27 +22,30 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0  # Fetch the complete history
-    - name: Fetch the latest changes from main
-      run: git fetch origin main
-    - name: Install dependencies
-      run:  pip install -r requirements.txt
-    - name: install dbt packages
-      run: dbt deps
-      working-directory: ./dbt
-    - name: Seed the model
-      run: dbt seed --target standard_main
-      working-directory: ./dbt
-    - name: build and test (Full)
-      run:  dbt build --target standard_main
-      working-directory: ./dbt
+    # - name: Install dependencies
+    #   run:  pip install -r requirements.txt
+    # - name: install dbt packages
+    #   run: dbt deps
+    #   working-directory: ./dbt
+    # - name: build (Full)
+    #   run:  dbt build --target standard_main
+    #   working-directory: ./dbt
+    # - name: Build docs
+    #   run: dbt docs generate --target standard_main
+    #   working-directory: ./dbt
+    # - name: Upload to S3.
+    #   run: aws s3 cp /home/runner/work/cb_customizations/cb_customizations/dbt/target/ ${{secrets.AWS_S3_BUCKET}}/dbt-target/main/ --recursive
+    #   env:
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     AWS_DEFAULT_REGION: 'eu-central-1'
 
-    
-  test_on_prod_branches:
+  build_on_prod_branches:
     runs-on: ubuntu-latest
     needs: build-on-main
     strategy:
         matrix:
-          branch: [['main1', 'standard_main1'], ['main2', 'stamdard_main2']]
+          branch: [['main1', 'client1_main'], ['main2', 'client2_main']]
     
     steps:
         - name: echo matrix branch and associated schema
@@ -54,22 +57,32 @@ jobs:
           with:
             fetch-depth: 0  # Fetch the complete history  
             ref: ${{ matrix.branch[0]}}
+            token: ${{ secrets.GH_TOKEN }}
         - name: authenticate
           run: |
-            git config user.name github-actions
-            git config user.email github-actions@github.com
+            git config user.name ogierpaul
+            git config user.email ogier.paul@gmail.com
         - name: Merge pull request branch into main1
           run: git merge --no-ff origin/main
-        - name: Install dependencies
-          run:  pip install -r requirements.txt
-        - name: install dbt packages
-          run: dbt deps
-          working-directory: ./dbt
-        - name: Seed the model
-          run: dbt seed --target  ${{ matrix.branch[1]}}
-          working-directory: ./dbt
-        - name: build and test (Full)
-          run:  dbt build --target ${{ matrix.branch[1]}}
-          working-directory: ./dbt
-    
-        
+        # - name: Install dependencies
+        #   run:  pip install -r requirements.txt
+        # - name: install dbt packages
+        #   run: dbt deps
+        #   working-directory: ./dbt
+        # - name: Seed the model
+        #   run: dbt seed --target  ${{ matrix.branch[1]}}
+        #   working-directory: ./dbt
+        # - name: build and test (Full)
+        #   run:  dbt build --target ${{ matrix.branch[1]}}
+        #   working-directory: ./dbt
+        # - name: Build docs
+        #   run: dbt docs generate --target ${{ matrix.branch[1]}}
+        #   working-directory: ./dbt
+        # - name: Upload to S3.
+        #   run: aws s3 cp /home/runner/work/cb_customizations/cb_customizations/dbt/target/ ${{secrets.AWS_S3_BUCKET}}/dbt-target/${{ matrix.branch[0]}}/ --recursive
+        #   env:
+        #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        #     AWS_DEFAULT_REGION: 'eu-central-1'
+        - name: commit and push
+          run: git push origin ${{ matrix.branch[0]}}
