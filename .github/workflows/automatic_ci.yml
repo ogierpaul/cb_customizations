@@ -55,8 +55,10 @@ jobs:
         # - name: Run tests
         #   run: echo "$(<Readme.md)" 
         - name: echo pr branch
+          env:
+            PR_BRANCH: ${{ build-and-test-the-pull-request.identify-github-pr-branch-name.outputs.PR_BRANCH}}
           run: |
-             echo "${{ build-and-test-the-pull-request.identify-github-pr-branch-name.outputs.PR_BRANCH}}"
+             echo "$PR_BRANCH"
         # - name: Checkout code
         #   uses: actions/checkout@v4
         #   with:
