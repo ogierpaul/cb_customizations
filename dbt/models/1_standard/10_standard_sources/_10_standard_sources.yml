@@ -23,3 +23,14 @@ seeds:
           - not_null
       - name: name
       - name: country
+  - name: suppliers_scopeout
+    description: configuration table for scoping in and out suppliers
+    columns:
+      - name: supplier_id
+        tests:
+          - unique
+          - not_null
+      - name: supplier_scopeout
+        tests:
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: boolean 
