@@ -62,6 +62,6 @@ jobs:
           env:
             PR_BRANCH: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
           run: |
-               git merge --no-ff origin/$PR_BRANCH
+               git merge --ff-only origin/$PR_BRANCH
         - name: Run tests --after
           run: echo "$(<Readme.md)"                
