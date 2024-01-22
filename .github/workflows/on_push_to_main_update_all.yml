@@ -15,19 +15,37 @@ env:
 
 jobs:
   build-on-main:
-    # Calls reusable workflow
-    uses: ogierpaul/cb_customizations/.github/workflows/reusable_dbt_build.yml@main
-    with:
-      target_name: 'standard_main'
-      branch_name: 'main'
-    secrets: inherit
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch the complete history
+    - name: Install dependencies
+      run:  pip install -r requirements.txt
+    - name: install dbt packages
+      run: dbt deps
+      working-directory: ./dbt
+    - name: build (Full)
+      run:  dbt build --target standard_main
+      working-directory: ./dbt
+    - name: Build docs
+      run: dbt docs generate --target standard_main
+      working-directory: ./dbt
+    - name: Upload to S3.
+      run: aws s3 cp /home/runner/work/cb_customizations/cb_customizations/dbt/target/ ${{secrets.AWS_S3_BUCKET}}/dbt-target/main/ --recursive
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'eu-central-1'
 
   build_on_prod_branches:
     runs-on: ubuntu-latest
     needs: build-on-main
     strategy:
         matrix:
-          branch: [['main1', 'client1_main'], ['main2', 'client2_main']]
+          branch: [['main1', 'standard_main1'], ['main2', 'stamdard_main2']]
     
     steps:
         - name: echo matrix branch and associated schema
@@ -43,15 +61,28 @@ jobs:
           run: |
             git config user.name github-actions
             git config user.email github-actions@github.com
-        - name: Merge main branch into client branch
+        - name: Merge pull request branch into main1
           run: git merge --no-ff origin/main
         - name: Install dependencies
           run:  pip install -r requirements.txt
         - name: install dbt packages
           run: dbt deps
           working-directory: ./dbt
+        - name: Seed the model
+          run: dbt seed --target  ${{ matrix.branch[1]}}
+          working-directory: ./dbt
         - name: build and test (Full)
           run:  dbt build --target ${{ matrix.branch[1]}}
           working-directory: ./dbt
+        - name: Build docs
+          run: dbt docs generate --target ${{ matrix.branch[1]}}
+          working-directory: ./dbt
+        - name: Upload to S3.
+          run: aws s3 cp /home/runner/work/cb_customizations/cb_customizations/dbt/target/ ${{secrets.AWS_S3_BUCKET}}/dbt-target/${{ matrix.branch[0]}}/ --recursive
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_DEFAULT_REGION: 'eu-central-1'
+        - name: commit and push
+          run: git push origin ${{ matrix.branch[0]}}
     
-        
