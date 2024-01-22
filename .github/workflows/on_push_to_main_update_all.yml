@@ -60,10 +60,10 @@ jobs:
             token: ${{ secrets.GH_TOKEN }}
         - name: authenticate
           run: |
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-        # - name: Merge pull request branch into main1
-        #   run: git merge --no-ff origin/main
+            git config user.name ogierpaul
+            git config user.email ogier.paul@gmail.com
+        - name: Merge pull request branch into main1
+          run: git merge --no-ff origin/main
         # - name: Install dependencies
         #   run:  pip install -r requirements.txt
         # - name: install dbt packages
