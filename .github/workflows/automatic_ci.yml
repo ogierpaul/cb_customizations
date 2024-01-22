@@ -36,13 +36,21 @@ jobs:
           branch: ['main1', 'main2']
     
     steps:
-        - name: Merge changes into main branch
-          run: |
-            git merge --no-ff ${{ github.event.before }} ${{ github.sha }}
-            if [ $? -ne 0 ]; then
-                echo "Merge into ${{ matrix.branch }} failed. Resolve conflicts and try again."
-                exit 1
-            fi
+        - name: Checkout code
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 0  # Fetch the complete history
+        
+        # - name: Fetch the latest changes from the client branch
+        #   run: git fetch origin ${{ matrix.branch }}
+        
+        # - name: Merge changes into main branch
+        #   run: |
+        #     git merge --no-ff ${{ github.event.before }} ${{ github.sha }}
+        #     if [ $? -ne 0 ]; then
+        #         echo "Merge into ${{ matrix.branch }} failed. Resolve conflicts and try again."
+        #         exit 1
+        #     fi
         - name: Run tests
           run: |
             echo "$(<Readme.md)" 
