@@ -64,6 +64,6 @@ jobs:
           run: |
                git checkout main1
                git pull origin main1
-               git merge --no-ff $PR_BRANCH
+               git merge --no-ff origin/$PR_BRANCH
         - name: Run tests --after
           run: echo "$(<Readme.md)"                
