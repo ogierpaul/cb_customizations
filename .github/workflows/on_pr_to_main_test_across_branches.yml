@@ -48,6 +48,7 @@ jobs:
       working-directory: ./dbt
     - name: build with slim CI and defer to standard_main
       run:  dbt build --target standard_qa --select state:modified+ --defer --state ./
+      working-directory: ./dbt
   
   # test-pr-on-prod-branches:
   #   runs-on: ubuntu-latest
