@@ -24,11 +24,18 @@ jobs:
         fetch-depth: 0  # Fetch the complete history
     - name: Install dependencies
       run:  pip install -r requirements.txt
+    - name: Copy S3 manifest file
+      run: |
+        aws s3 cp ${{secrets.AWS_S3_BUCKET}}/dbt-target/main/manifest.json /home/runner/work/cb_customizations/cb_customizations/dbt/manifest.json
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'eu-central-1'   
     - name: install dbt packages
       run: dbt deps
       working-directory: ./dbt
     - name: build (Full)
-      run:  dbt build --target standard_main
+      run:  dbt build --target standard_main --select state:modified+ --state ./
       working-directory: ./dbt
     - name: Build docs
       run: dbt docs generate --target standard_main
