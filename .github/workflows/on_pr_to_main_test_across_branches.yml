@@ -98,7 +98,7 @@ jobs:
           run: dbt deps
           working-directory: ./dbt
         - name: build with slim CI and defer to client_main
-          run:  dbt build --target ${{ matrix.branch[0]}} --select state:modified+ --defer --state ./
+          run:  dbt build --target ${{ matrix.branch[1]}} --select state:modified+ --defer --state ./
           working-directory: ./dbt
           env:
             DBT_PROFILES_DIR: ./
