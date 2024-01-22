@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - main
-
+    
 
 jobs:
   test-pr-on-main:
@@ -49,6 +49,13 @@ jobs:
     - name: build with slim CI and defer to standard_main
       run:  dbt build --target standard_qa --select state:modified+ --defer --state ./
       working-directory: ./dbt
+      env:
+        DBT_PROFILES_DIR: ./
+        DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER}}
+        DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD}}
+        DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
+        DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+        DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
   
   # test-pr-on-prod-branches:
   #   runs-on: ubuntu-latest
