@@ -1,5 +1,7 @@
 SELECT
-dim_invoice::INT AS dim_invoice,
-supplier_id::INT AS supplier_id,
-amount::FLOAT as amount
-FROM {{ref('seeds_source_invoices')}}
+i.dim_invoice,
+i.supplier_id,
+i.amount
+FROM {{ref('invoices_transformed1')}} as i
+LEFT JOIN {{ref('suppliers_scopeout_full')}} as b ON i.supplier_id = b.supplier_id
+WHERE b.supplier_scope_out = FALSE
