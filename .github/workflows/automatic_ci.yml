@@ -39,20 +39,9 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v2
           with:
-            fetch-depth: 0  # Fetch the complete history
-        
-        # - name: Fetch the latest changes from the client branch
-        #   run: git fetch origin ${{ matrix.branch }}
-        
-        # - name: Merge changes into main branch
-        #   run: |
-        #     git merge --no-ff ${{ github.event.before }} ${{ github.sha }}
-        #     if [ $? -ne 0 ]; then
-        #         echo "Merge into ${{ matrix.branch }} failed. Resolve conflicts and try again."
-        #         exit 1
-        #     fi
+            fetch-depth: 0  # Fetch the complete history    
         - name: Run tests
           run: |
-            echo "$(<Readme.md)" 
-            echo "${{ matrix.branch }}"
-            echo $PR_BRANCH
+              echo "$(<Readme.md)" 
+        - name: Echo current branch
+          run: echo "Current branch is ${GITHUB_REF#refs/heads/}"
