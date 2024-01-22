@@ -21,46 +21,37 @@ jobs:
       target_name: 'standard_main'
       branch_name: 'main'
     secrets: inherit
-  build_on_prod_branches:
-    uses: ogierpaul/cb_customizations/.github/workflows/reusable_dbt_build.yml@main
-    strategy:
-      matrix:
-        branch: [['main1', 'client1_main'], ['main2', 'client2_main']]
-    with:
-      target_name: ${{ matrix.branch[1]}}
-      branch_name: ${{ matrix.branch[0]}}
-    secrets: inherit
 
-  # test_on_prod_branches:
-  #   runs-on: ubuntu-latest
-  #   needs: build-on-main
-  #   strategy:
-  #       matrix:
-  #         branch: [['main1', 'client1_main'], ['main2', 'client2_main']]
+  build_on_prod_branches:
+    runs-on: ubuntu-latest
+    needs: build-on-main
+    strategy:
+        matrix:
+          branch: [['main1', 'client1_main'], ['main2', 'client2_main']]
     
-  #   steps:
-  #       - name: echo matrix branch and associated schema
-  #         run: |
-  #           echo ${{ matrix.branch[0]}}
-  #           echo ${{ matrix.branch[1]}} 
-  #       - name: Checkout code
-  #         uses: actions/checkout@v4
-  #         with:
-  #           fetch-depth: 0  # Fetch the complete history  
-  #           ref: ${{ matrix.branch[0]}}
-  #       - name: authenticate
-  #         run: |
-  #           git config user.name github-actions
-  #           git config user.email github-actions@github.com
-  #       - name: Merge pull request branch into main1
-  #         run: git merge --no-ff origin/main
-  #       - name: Install dependencies
-  #         run:  pip install -r requirements.txt
-  #       - name: install dbt packages
-  #         run: dbt deps
-  #         working-directory: ./dbt
-  #       - name: build and test (Full)
-  #         run:  dbt build --target ${{ matrix.branch[1]}}
-  #         working-directory: ./dbt
+    steps:
+        - name: echo matrix branch and associated schema
+          run: |
+            echo ${{ matrix.branch[0]}}
+            echo ${{ matrix.branch[1]}} 
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # Fetch the complete history  
+            ref: ${{ matrix.branch[0]}}
+        - name: authenticate
+          run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+        - name: Merge main branch into client branch
+          run: git merge --no-ff origin/main
+        - name: Install dependencies
+          run:  pip install -r requirements.txt
+        - name: install dbt packages
+          run: dbt deps
+          working-directory: ./dbt
+        - name: build and test (Full)
+          run:  dbt build --target ${{ matrix.branch[1]}}
+          working-directory: ./dbt
     
         
