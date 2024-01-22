@@ -17,10 +17,31 @@ snowflake-creds: &snowflake-creds
 
 cb_customizations:
   outputs:
-    dev:
+    standard_dev:
       <<: *snowflake-creds
-      schema: DEV
-    main:
+      schema: STANDARD_DEV
+    standard_qa:
       <<: *snowflake-creds
-      schema: MAIN
+      schema: STANDARD_QA
+    standard_main:
+      <<: *snowflake-creds
+      schema: STANDARD_MAIN
+    client1_dev:
+      <<: *snowflake-creds
+      schema: CLIENT1_DEV
+    client1_qa:
+      <<: *snowflake-creds
+      schema: CLIENT1_QA
+    client1_main:
+      <<: *snowflake-creds
+      schema: CLIENT1_MAIN
+    client2_dev:
+      <<: *snowflake-creds
+      schema: CLIENT2_DEV
+    client2_qa:
+      <<: *snowflake-creds
+      schema: CLIENT2_QA
+    client2_main:
+      <<: *snowflake-creds
+      schema: CLIENT2_MAIN
   target: dev
