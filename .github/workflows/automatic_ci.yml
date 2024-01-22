@@ -9,23 +9,31 @@ on:
 jobs:
   build-and-test-the-pull-request:
     runs-on: ubuntu-latest
+    outputs:
+        pr_branch: ${{ steps.identify-github-pr-branch-name.outputs.pr_branch }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0  # Fetch the complete history
+    - id: identify-github-pr-branch-name
+      run: |
+        PR_BRANCH=${GITHUB_HEAD_REF/refs\/heads\//}
+        echo $PR_BRANCH
+        echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_OUTPUT"
+    # - name: Checkout code
+    #   uses: actions/checkout@v2
+    #   with:
+    #     fetch-depth: 0  # Fetch the complete history
 
-    - name: Fetch the latest changes from main
-      run: git fetch origin main
+    # - name: Fetch the latest changes from main
+    #   run: git fetch origin main
 
-    - name: Merge the latest changes from main
-      run: git merge --ff-only origin/main
+    # - name: Merge the latest changes from main
+    #   run: git merge --ff-only origin/main
 
     - name: Run tests
+      env:
+        PR_BRANCh: ${{ steps.identify-github-pr-branch-name.outputs.PR_BRANCH }}
       run: | 
         echo "$(<Readme.md)"
-        PR_BRANCH=${GITHUB_HEAD_REF/refs\/heads\//}
         echo $PR_BRANCH
     
   test_on_prod_branches:
@@ -38,22 +46,21 @@ jobs:
     steps:
         - name: echo matrix branch
           run: echo ${{ matrix.branch }}
-        - name: Checkout code
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0  # Fetch the complete history  
-            ref: ${{ matrix.branch }}
+        # - name: Checkout code
+        #   uses: actions/checkout@v4
+        #   with:
+        #     fetch-depth: 0  # Fetch the complete history  
+        #     ref: ${{ matrix.branch }}
   
-        - name: Run tests
-          run: echo "$(<Readme.md)" 
+        # - name: Run tests
+        #   run: echo "$(<Readme.md)" 
         - name: echo pr branch
           run: |
-            PR_BRANCH=${GITHUB_HEAD_REF/refs\/heads\//}
-            echo $PR_BRANCH
-        - name: Checkout code
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0  # Fetch the complete history
-            ref: ${GITHUB_HEAD_REF/refs\/heads\//}    
-        - name: Run tests
-          run: echo "$(<Readme.md)" 
+             echo "${{ build-and-test-the-pull-request.identify-github-pr-branch-name.outputs.PR_BRANCH}}"
+        # - name: Checkout code
+        #   uses: actions/checkout@v4
+        #   with:
+        #     fetch-depth: 0  # Fetch the complete history
+        #     ref: ${{ build-and-test-the-pull-request.identify-github-pr-branch-name.outputs.pr_branch}}   
+        # - name: Run tests
+        #   run: echo "$(<Readme.md)" 
