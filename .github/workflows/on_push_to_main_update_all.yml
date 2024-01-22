@@ -16,7 +16,7 @@ env:
 jobs:
   build-on-main:
     # Calls reusable workflow
-    uses: ogierpaul/cb_customizations/.github/workflows/reusable_dbt_built.yml@main
+    uses: ogierpaul/cb_customizations/.github/workflows/reusable_dbt_build.yml@main
     with:
       target_name: 'standard_main'
       branch_name: 'main'
