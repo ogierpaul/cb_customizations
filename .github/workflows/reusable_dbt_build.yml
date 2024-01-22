@@ -1,16 +1,19 @@
 # Deployment pipeline 
-name: Development
+name: reusable_dbt_workflow
 
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
-    branches:
-      - not_existing
   workflow_call:
+    inputs:
+      branch_name:
+        description: Github branch containing the code
+        required: true
+        default: "main"
+        type: string
+      target_name: 
+        description: Dbt profiles target profile
+        required: true
+        default: "standard_dev"
+        type: string
     
 env:
   DBT_PROFILES_DIR: ./
@@ -21,20 +24,19 @@ env:
   DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
 
 jobs:
-  ci_test:
+  dbt_build:
     name: test dbt
     runs-on: ubuntu-latest
     steps:
       - name: Check out
-        uses: actions/checkout@v3
-      
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch the complete history  
+          ref: ${{ inputs.branch_name}}
+          
       - uses: actions/setup-python@v1
         with:
           python-version: "3.9.18"
-
-      - name: Test profiles existence
-        run:  test -e profiles.yml
-        working-directory: ./dbt
 
       - name: Install dependencies
         run:  pip install -r requirements.txt
@@ -42,11 +44,7 @@ jobs:
       - name: install dbt packages
         run: dbt deps
         working-directory: ./dbt
-      
-      - name: Seed the model
-        run: dbt seed
-        working-directory: ./dbt
 
-      - name: build and test (Full)
-        run:  dbt build
+      - name: build
+        run:  dbt build --target ${{inputs.target_name}}
         working-directory: ./dbt

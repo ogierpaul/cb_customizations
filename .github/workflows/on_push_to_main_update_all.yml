@@ -29,9 +29,6 @@ jobs:
     - name: install dbt packages
       run: dbt deps
       working-directory: ./dbt
-    - name: Seed the model
-      run: dbt seed --target standard_main
-      working-directory: ./dbt
     - name: build and test (Full)
       run:  dbt build --target standard_main
       working-directory: ./dbt
@@ -64,9 +61,6 @@ jobs:
           run:  pip install -r requirements.txt
         - name: install dbt packages
           run: dbt deps
-          working-directory: ./dbt
-        - name: Seed the model
-          run: dbt seed --target  ${{ matrix.branch[1]}}
           working-directory: ./dbt
         - name: build and test (Full)
           run:  dbt build --target ${{ matrix.branch[1]}}
