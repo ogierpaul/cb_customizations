@@ -1,4 +1,4 @@
-name: Update Main Branches
+name: Launch tests on different branches on a PR to main
 
 on:
   pull_request:
