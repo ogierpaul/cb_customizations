@@ -2,6 +2,7 @@ version : 2
 
 models:
   - name: invoices_transformed
+    description: depends on invoices_transformed1. Does the filtering.
     columns:
       - name: dim_invoice
         description: invoice key
@@ -36,4 +37,17 @@ models:
         tests:
         - dbt_expectations.expect_column_value_lengths_to_equal:
             value: 2
+  - name: suppliers_scopeout_full
+    description: enhanced (completed and filled null values) suppliers scope in and out configuration table
+    columns:
+      - name: supplier_id
+        description: FK to supplier master data
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('suppliers_transformed')
+              field: supplier_id
+    
+
 
