@@ -57,6 +57,7 @@ jobs:
           with:
             fetch-depth: 0  # Fetch the complete history  
             ref: ${{ matrix.branch[0]}}
+            token: ${{ secrets.GH_TOKEN }}
         - name: authenticate
           run: |
             git config user.name github-actions
@@ -85,4 +86,3 @@ jobs:
         #     AWS_DEFAULT_REGION: 'eu-central-1'
         - name: commit and push
           run: git push origin ${{ matrix.branch[0]}}
-    
