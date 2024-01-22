@@ -36,12 +36,24 @@ jobs:
           branch: ['main1', 'main2']
     
     steps:
+        - name: echo matrix branch
+          run: echo ${{ matrix.branch }}
         - name: Checkout code
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
           with:
-            fetch-depth: 0  # Fetch the complete history    
+            fetch-depth: 0  # Fetch the complete history  
+            ref: ${{ matrix.branch }}
+  
         - name: Run tests
+          run: echo "$(<Readme.md)" 
+        - name: echo pr branch
           run: |
-              echo "$(<Readme.md)" 
-        - name: Echo current branch
-          run: echo "Current branch is ${GITHUB_REF#refs/heads/}"
+            PR_BRANCH=${GITHUB_HEAD_REF/refs\/heads\//}
+            echo $PR_BRANCH
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # Fetch the complete history
+            ref: ${GITHUB_HEAD_REF/refs\/heads\//}    
+        - name: Run tests
+          run: echo "$(<Readme.md)" 
