@@ -50,18 +50,20 @@ jobs:
           with:
             fetch-depth: 0  # Fetch the complete history  
             ref: ${{ matrix.branch }}
-  
-        - name: Run tests
+
+        - name: Run tests --before
           run: echo "$(<Readme.md)" 
         - name: echo pr branch
           env:
             PR_BRANCH: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
           run: |
              echo "$PR_BRANCH"
-        # - name: Checkout code
-        #   uses: actions/checkout@v4
-        #   with:
-        #     fetch-depth: 0  # Fetch the complete history
-        #     ref: ${{ build-and-test-the-pull-request.identify-github-pr-branch-name.outputs.pr_branch}}   
-        # - name: Run tests
-        #   run: echo "$(<Readme.md)" 
+        - name: Merge pull request branch into main1
+          env:
+            PR_BRANCH: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
+          run: |
+               git checkout main1
+               git pull origin main1
+               git merge --no-ff $PR_BRANCH
+        - name: Run tests --after
+          run: echo "$(<Readme.md)"                
