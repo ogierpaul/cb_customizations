@@ -18,7 +18,7 @@ jobs:
         PR_BRANCH=${GITHUB_HEAD_REF/refs\/heads\//}
         echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_OUTPUT"
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0  # Fetch the complete history
 
@@ -33,28 +33,28 @@ jobs:
         PR_BRANCH: ${{ steps.identify-github-pr-branch-name.outputs.PR_BRANCH }}
       run: | 
         echo $PR_BRANCH
-    - name: Install dependencies
-      run:  pip install -r requirements.txt
-    - name: Copy the manifest file for the standard main from S3
-      run: |
-        aws s3 cp ${{secrets.AWS_S3_BUCKET}}/dbt-target/main/manifest.json /home/runner/work/cb_customizations/cb_customizations/dbt/manifest.json
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: 'eu-central-1'   
-    - name: install dbt packages
-      run: dbt deps
-      working-directory: ./dbt
-    - name: build with slim CI and defer to standard_main
-      run:  dbt build --target standard_qa --select state:modified+ --defer --state ./
-      working-directory: ./dbt
-      env:
-        DBT_PROFILES_DIR: ./
-        DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER}}
-        DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD}}
-        DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
-        DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
-        DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
+    # - name: Install dependencies
+    #   run:  pip install -r requirements.txt
+    # - name: Copy the manifest file for the standard main from S3
+    #   run: |
+    #     aws s3 cp ${{secrets.AWS_S3_BUCKET}}/dbt-target/main/manifest.json /home/runner/work/cb_customizations/cb_customizations/dbt/manifest.json
+    #   env:
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     AWS_DEFAULT_REGION: 'eu-central-1'   
+    # - name: install dbt packages
+    #   run: dbt deps
+    #   working-directory: ./dbt
+    # - name: build with slim CI and defer to standard_main
+    #   run:  dbt build --target standard_qa --select state:modified+ --defer --state ./
+    #   working-directory: ./dbt
+    #   env:
+    #     DBT_PROFILES_DIR: ./
+    #     DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER}}
+    #     DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD}}
+    #     DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
+    #     DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+    #     DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
   
   test-pr-on-prod-branches:
     runs-on: ubuntu-latest
@@ -77,12 +77,12 @@ jobs:
             git config user.email github-actions@github.com
         - name: echo pr branch
           env:
-            PR_BRANCH: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
+            PR_BRANCH: ${{ needs.test-pr-on-main.outputs.PR_BRANCH }}
           run: |
              echo "$PR_BRANCH"
         - name: Merge pull request branch into main1
           env:
-            PR_BRANCH: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
+            PR_BRANCH: ${{ needs.test-pr-on-main.outputs.PR_BRANCH }}
           run: |
             git merge --no-ff origin/$PR_BRANCH              
         - name: Copy the existing manifest file for the client main from S3
