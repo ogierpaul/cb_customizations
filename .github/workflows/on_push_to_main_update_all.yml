@@ -15,24 +15,12 @@ env:
 
 jobs:
   build-on-main:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0  # Fetch the complete history
-    - name: Fetch the latest changes from main
-      run: git fetch origin main
-    - name: Install dependencies
-      run:  pip install -r requirements.txt
-    - name: install dbt packages
-      run: dbt deps
-      working-directory: ./dbt
-    - name: build and test (Full)
-      run:  dbt build --target standard_main
-      working-directory: ./dbt
-
+    # Calls reusable workflow
+    uses: ogierpaul/cb_customizations/.github/workflows/reusable_dbt_built.yml@main
+    with:
+      target_name: 'standard_main'
+      branch_name: 'main'
+    secrets: inherit
     
   test_on_prod_branches:
     runs-on: ubuntu-latest
