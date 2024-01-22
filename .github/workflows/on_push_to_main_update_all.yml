@@ -1,4 +1,4 @@
-name: Launch tests on different branches on a PR to main
+name: On push to main, build on main, main1, main2 environments
 
 on:
   push:
