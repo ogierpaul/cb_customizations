@@ -10,7 +10,7 @@ jobs:
   build-and-test-the-pull-request:
     runs-on: ubuntu-latest
     outputs:
-        pr_branch: ${{ steps.identify-github-pr-branch-name.outputs.pr_branch }}
+        pr_branch: ${{ steps.identify-github-pr-branch-name.outputs.PR_BRANCH }}
 
     steps:
     - id: identify-github-pr-branch-name
@@ -33,7 +33,6 @@ jobs:
       env:
         PR_BRANCh: ${{ steps.identify-github-pr-branch-name.outputs.PR_BRANCH }}
       run: | 
-        echo "$(<Readme.md)"
         echo $PR_BRANCH
     
   test_on_prod_branches:
@@ -56,7 +55,7 @@ jobs:
         #   run: echo "$(<Readme.md)" 
         - name: echo pr branch
           env:
-            PR_BRANCh: ${{ steps.identify-github-pr-branch-name.outputs.PR_BRANCH }}
+            PR_BRANCh: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
           run: |
              echo "$PR_BRANCH"
         # - name: Checkout code
