@@ -1,0 +1,9 @@
+version : 2
+
+models:
+  - name: spend_in_monkey_money
+    description: sample datamart report that is created in the right datamart folder
+    columns:
+      - name: supplier_name
+      - name: amount_in_monkey_money
+        description: Amount multiplied by a very large number
