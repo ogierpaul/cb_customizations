@@ -42,7 +42,7 @@ jobs:
     needs: build-on-main
     strategy:
         matrix:
-          branch: [['main1', 'standard_main1'], ['main2', 'stamdard_main2']]
+          branch: [['main1', 'client1_main'], ['main2', 'client2_main']]
     
     steps:
         - name: echo matrix branch and associated schema
