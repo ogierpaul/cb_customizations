@@ -1,6 +1,6 @@
 version: 2
 
-models:
+seeds:
   - name: seeds_source_invoices
     description: invoices used for test data
     columns:

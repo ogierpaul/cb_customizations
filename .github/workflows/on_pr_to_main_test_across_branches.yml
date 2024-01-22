@@ -1,0 +1,70 @@
+name: Launch tests on different branches on a PR to main
+
+on:
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  build-and-test-the-pull-request:
+    runs-on: ubuntu-latest
+    outputs:
+        pr_branch: ${{ steps.identify-github-pr-branch-name.outputs.PR_BRANCH }}
+
+    steps:
+    - id: identify-github-pr-branch-name
+      run: |
+        PR_BRANCH=${GITHUB_HEAD_REF/refs\/heads\//}
+        echo "PR_BRANCH=$PR_BRANCH" >> "$GITHUB_OUTPUT"
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch the complete history
+
+    - name: Fetch the latest changes from main
+      run: git fetch origin main
+
+    - name: Merge the latest changes from main
+      run: git merge --ff-only origin/main
+
+    - name: Run tests
+      env:
+        PR_BRANCH: ${{ steps.identify-github-pr-branch-name.outputs.PR_BRANCH }}
+      run: | 
+        echo $PR_BRANCH
+        echo "$(<Readme.md)"
+    
+  test_on_prod_branches:
+    runs-on: ubuntu-latest
+    needs: build-and-test-the-pull-request
+    strategy:
+        matrix:
+          branch: ['main1', 'main2']
+    
+    steps:
+        - name: echo matrix branch
+          run: echo ${{ matrix.branch }}
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # Fetch the complete history  
+            ref: ${{ matrix.branch }}
+        - name: authenticate
+          run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+        - name: Run tests --before
+          run: echo "$(<Readme.md)" 
+        - name: echo pr branch
+          env:
+            PR_BRANCH: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
+          run: |
+             echo "$PR_BRANCH"
+        - name: Merge pull request branch into main1
+          env:
+            PR_BRANCH: ${{ needs.build-and-test-the-pull-request.outputs.PR_BRANCH }}
+          run: |
+               git merge --no-ff origin/$PR_BRANCH
+        - name: Run tests --after
+          run: echo "$(<Readme.md)"                

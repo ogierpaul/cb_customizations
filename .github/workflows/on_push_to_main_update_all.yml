@@ -1,0 +1,75 @@
+name: Launch tests on different branches on a PR to main
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+    DBT_PROFILES_DIR: ./
+    DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER}}
+    DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD}}
+    DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
+    DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+    DBT_SNOWFLAKE_WH: ${{ secrets.DBT_SNOWFLAKE_WH }}
+
+jobs:
+  build-on-main:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch the complete history
+    - name: Fetch the latest changes from main
+      run: git fetch origin main
+    - name: Install dependencies
+      run:  pip install -r requirements.txt
+    - name: install dbt packages
+      run: dbt deps
+      working-directory: ./dbt
+    - name: Seed the model
+      run: dbt seed --target standard_main
+      working-directory: ./dbt
+    - name: build and test (Full)
+      run:  dbt build --target standard_main
+      working-directory: ./dbt
+
+    
+  test_on_prod_branches:
+    runs-on: ubuntu-latest
+    needs: build-on-main
+    strategy:
+        matrix:
+          branch: [['main1', 'standard_main1'], ['main2', 'stamdard_main2']]
+    
+    steps:
+        - name: echo matrix branch and associated schema
+          run: |
+            echo ${{ matrix.branch[0]}}
+            echo ${{ matrix.branch[1]}} 
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # Fetch the complete history  
+            ref: ${{ matrix.branch[0]}}
+        - name: authenticate
+          run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+        - name: Merge pull request branch into main1
+          run: git merge --no-ff origin/main
+        - name: Install dependencies
+          run:  pip install -r requirements.txt
+        - name: install dbt packages
+          run: dbt deps
+          working-directory: ./dbt
+        - name: Seed the model
+          run: dbt seed --target  ${{ matrix.branch[1]}}
+          working-directory: ./dbt
+        - name: build and test (Full)
+          run:  dbt build --target ${{ matrix.branch[1]}}
+          working-directory: ./dbt
+    
+        
