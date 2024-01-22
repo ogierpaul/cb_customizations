@@ -25,7 +25,7 @@ env:
 
 jobs:
   dbt_build:
-    name: test dbt
+    name: dbt build
     runs-on: ubuntu-latest
     steps:
       - name: Check out
