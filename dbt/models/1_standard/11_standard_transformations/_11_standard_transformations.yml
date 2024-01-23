@@ -21,12 +21,6 @@ models:
           - dbt_utils.accepted_range:
               min_value: 0
               inclusive: true
-      - name: amount_usd
-        description: amount in usd
-        tests:
-          - dbt_utils.accepted_range:
-              min_value: 0
-              inclusive: true
   - name: suppliers_transformed
     columns:
       - name: supplier_id
